@@ -3,7 +3,7 @@
 	<head>
 		<title>Slideshow</title>
 	</head>
-	<body style="margin: 0; padding: 0">
+	<body style="margin: 0; padding: 0; background-color: black">
 		<canvas
 			id="canvas"
 			width="1920"
@@ -12,11 +12,10 @@
 		></canvas>
 		<script>
 			const imagePrefix = 'image';
-			const numSlides = 59;
+			const numSlides = 113;
 			const slideDuration = 6 * 1000;
 			const transitionDuration = 4 * 1000;
 			const startSlideIndex = -1; //Math.floor(Math.random() * numSlides);
-			console.log('startSlideIndex', startSlideIndex);
 
 			const canvas = document.getElementById('canvas');
 			const { width, height } = window.screen;
@@ -25,6 +24,7 @@
 			const ctx = canvas.getContext('2d');
 			let isInitialLoad = true;
 			let slideIndex = startSlideIndex;
+			let foreverIndex = startSlideIndex;
 			const evenImage = new Image();
 			const oddImage = new Image();
 			let transitionStartTime = null;
@@ -36,7 +36,7 @@
 				if (nextSlideIndex >= numSlides) {
 					nextSlideIndex = 0;
 				}
-				if (nextSlideIndex % 2 === 0) {
+				if ((foreverIndex + 1) % 2 === 0) {
 					evenImage.src = `images/${imagePrefix}${pad(
 						nextSlideIndex,
 						3
@@ -59,6 +59,7 @@
 						console.log('initial load');
 						drawImage(img, 1);
 						slideIndex += 1;
+						foreverIndex += 1;
 						loadNextImage();
 						setTimeout(startTransition, slideDuration);
 					});
@@ -98,7 +99,7 @@
 					nextZoomedImageAlpha = 0;
 				}
 				ctx.clearRect(0, 0, width, height);
-				if (slideIndex % 2 === 0) {
+				if (foreverIndex % 2 === 0) {
 					if (currentImageAlpha > 0) {
 						drawImage(evenImage, 1);
 					}
@@ -129,6 +130,7 @@
 					requestAnimationFrame(transitionToNext);
 				} else {
 					slideIndex += 1;
+					foreverIndex += 1;
 					if (slideIndex >= numSlides) {
 						slideIndex = 0;
 					}
@@ -148,7 +150,7 @@
 				const dstY = (height - dstH) / 2;
 				ctx.globalAlpha = alpha;
 				ctx.rect(0, 0, width, height);
-				ctx.fillStyle = 'white';
+				ctx.fillStyle = 'black';
 				ctx.fill();
 				ctx.drawImage(
 					img,
